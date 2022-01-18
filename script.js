@@ -31,7 +31,8 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const item = event.target;
+  item.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -56,8 +57,7 @@ const addToCar = async () => {
     const idItem = product.parentElement.childNodes[0].innerText;
     const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
     const li = createCartItemElement({ sku, name, salePrice }); 
-    carr.appendChild(li);
-    console.log(li);   
+    carr.appendChild(li);  
   });
 };
 
