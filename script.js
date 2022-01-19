@@ -1,5 +1,17 @@
 const itemsContainer = document.querySelector('.items');
 const carr = document.querySelector('.cart__items');
+
+const soma = () => {
+  const cartItems = Array.from(document.querySelectorAll('.cart__item'));
+  const Price = document.querySelector('.total-price');
+  const totalPrice = cartItems.reduce((acc, curr) => {
+    const arrayStrings = curr.textContent.split('$');
+    const price = arrayStrings[1];
+    return acc + +price;
+  }, 0);
+  console.log(totalPrice);
+  Price.innerText = totalPrice;
+};
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,6 +45,8 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
   const item = event.target;
   item.remove();
+  soma();
+  localStorage.setItem('Items', carr.innerHTML);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -57,11 +71,22 @@ const addToCar = async () => {
     const idItem = product.parentElement.childNodes[0].innerText;
     const { id: sku, title: name, price: salePrice } = await fetchItem(idItem);
     const li = createCartItemElement({ sku, name, salePrice }); 
-    carr.appendChild(li);  
+    carr.appendChild(li);
+    soma();
+    localStorage.setItem('Items', carr.innerHTML);
   });
+};
+
+const restoreStorege = () => {
+  // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/from
+  carr.innerHTML = localStorage.getItem('Items');
+  const list = carr.children;
+  Array.from(list).map((el) => el.addEventListener('click', cartItemClickListener));
+  soma();
 };
 
 window.onload = () => {
   init(fetchProducts);
   addToCar();
+  restoreStorege();
  };
