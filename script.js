@@ -1,16 +1,26 @@
 const itemsContainer = document.querySelector('.items');
 const carr = document.querySelector('.cart__items');
+const price = document.querySelector('.total-price');
 
 const soma = () => {
+  price.innerText = '0';
   const cartItems = Array.from(document.querySelectorAll('.cart__item'));
-  const Price = document.querySelector('.total-price');
   const totalPrice = cartItems.reduce((acc, curr) => {
     const arrayStrings = curr.textContent.split('$');
-    const price = arrayStrings[1];
-    return acc + +price;
+    const itemPrice = arrayStrings[1];
+    return acc + +itemPrice;
   }, 0);
-  console.log(totalPrice);
-  Price.innerText = totalPrice;
+  price.innerText = totalPrice;
+};
+
+const limparTudo = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+    const items = document.querySelectorAll('.cart__item');
+    items.forEach((element) => element.remove()); 
+    soma();
+    localStorage.setItem('Items', carr.innerHTML);
+  });
 };
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -89,4 +99,5 @@ window.onload = () => {
   init(fetchProducts);
   addToCar();
   restoreStorege();
+  limparTudo();
  };
