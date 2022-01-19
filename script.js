@@ -3,11 +3,10 @@ const carr = document.querySelector('.cart__items');
 const price = document.querySelector('.total-price');
 
 const soma = () => {
-  price.innerText = '0';
   const cartItems = Array.from(document.querySelectorAll('.cart__item'));
   const totalPrice = cartItems.reduce((acc, curr) => {
-    const arrayStrings = curr.textContent.split('$');
-    const itemPrice = arrayStrings[1];
+    const arrayStr = curr.textContent.split('$');
+    const itemPrice = arrayStr[1];
     return acc + +itemPrice;
   }, 0);
   price.innerText = totalPrice;
@@ -39,12 +38,12 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -59,6 +58,17 @@ function cartItemClickListener(event) {
   localStorage.setItem('Items', carr.innerHTML);
 }
 
+const carregando = () => {
+  const container = document.querySelector('.container');
+  const customElement = createCustomElement('section', 'loading', 'carregando...');
+  container.appendChild(customElement);
+};
+
+const removeCarregando = () => {
+  const aguardandoFetch = document.querySelector('.loading');
+  aguardandoFetch.remove();
+};
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -68,14 +78,17 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 const init = async (calback) => {
+  carregando();
   const { results } = await calback('computador');
   results.forEach(({ id: sku, title: name, thumbnail: image }) => {
     const sectionProduct = createProductItemElement({ sku, name, image });
     itemsContainer.appendChild(sectionProduct);
   });
+  removeCarregando();
 };
 
 const addToCar = async () => {
+  // carregando();
   itemsContainer.addEventListener('click', async (event) => {
     const product = event.target;
     const idItem = product.parentElement.childNodes[0].innerText;
@@ -83,6 +96,7 @@ const addToCar = async () => {
     const li = createCartItemElement({ sku, name, salePrice }); 
     carr.appendChild(li);
     soma();
+    // removeCarregando();
     localStorage.setItem('Items', carr.innerHTML);
   });
 };
