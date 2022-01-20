@@ -55,7 +55,7 @@ function cartItemClickListener(event) {
   const item = event.target;
   item.remove();
   soma();
-  localStorage.setItem('Items', carr.innerHTML);
+  saveCartItems(carr.innerHTML);
 }
 
 const carregando = () => {
@@ -97,13 +97,13 @@ const addToCar = async () => {
     carr.appendChild(li);
     soma();
     // removeCarregando();
-    localStorage.setItem('Items', carr.innerHTML);
+    saveCartItems(carr.innerHTML);
   });
 };
 
 const restoreStorege = () => {
   // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/from
-  carr.innerHTML = localStorage.getItem('Items');
+  carr.innerHTML = getSavedCartItems();
   const list = carr.children;
   Array.from(list).map((el) => el.addEventListener('click', cartItemClickListener));
   soma();
