@@ -18,7 +18,7 @@ const limparTudo = () => {
     const items = document.querySelectorAll('.cart__item');
     items.forEach((element) => element.remove()); 
     soma();
-    localStorage.setItem('Items', carr.innerHTML);
+    saveCartItems(carr.innerHTML);
   });
 };
 function createProductImageElement(imageSource) {
